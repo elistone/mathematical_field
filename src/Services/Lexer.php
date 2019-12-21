@@ -2,6 +2,7 @@
 
 namespace Drupal\mathematical_field\Services;
 
+use Drupal\mathematical_field\Operators;
 use ReflectionClass;
 
 /**
@@ -26,6 +27,13 @@ class Lexer {
   private $matches = [];
 
   /**
+   * Stores the postfix value after being sorted
+   *
+   * @var string
+   */
+  private $postfix = "";
+
+  /**
    * Parser constructor.
    */
   public function __construct() {
@@ -38,9 +46,12 @@ class Lexer {
    * @param string $string
    *
    * @return \Drupal\mathematical_field\Services\Lexer
+   * @throws \Exception
    */
   public function tokenizer(string $string): Lexer {
+    // found the matches
     $matches = [];
+
     // get regex
     $regex = $this->getRegex();
 
@@ -59,16 +70,91 @@ class Lexer {
   }
 
   /**
+   * Sort the matched values into operator precedence converting infix to
+   * postfix notation
+   *
+   * @throws \Exception
+   */
+  public function sortPrecedence(): Lexer {
+    if (empty($this->getMatches())) {
+      throw new \Exception('Cannot sort precedence without any matches');
+    }
+
+    // store the results
+    $result = "";
+
+    // items that belong to the stack
+    $stack = [];
+
+    // loop thought all the matches
+    foreach ($this->getMatches() as $match) {
+      // separate into type & value
+      $type = $match['TYPE'];
+      $value = $match['VALUE'];
+
+      // if it is a number add straight to the results
+      if ($type === "NUMBER") {
+        $result .= $value;
+      }
+      // if is an operator
+      elseif (strpos($type, 'OP_') !== FALSE) {
+        // while it is empty loop thought the stack only adding items based upon precedence
+        while (!empty($stack) && $this->precedence($value) <= $this->precedence($stack[0])) {
+          $result .= array_pop($stack);
+        }
+        // add next operator into the stack to be sorted next time we are here.
+        $stack[] = $value;
+      }
+    }
+
+    // once all done make sure we empty the stack of results
+    while (!empty($stack)) {
+      $result .= array_pop($stack);
+    }
+
+    // set the postfix value
+    $this->setPostfix($result);
+
+    // return this
+    return $this;
+  }
+
+
+  /**
+   * The precedence value of each operator
+   *
+   * @param string $operator
+   *
+   * @return int
+   */
+  private function precedence(string $operator): int {
+    switch ($operator) {
+      case Operators::OP_MINUS:
+      case Operators::OP_PLUS:
+        return 1;
+      case Operators::OP_MULTIPLY:
+      case Operators::OP_DIVIDE:
+        return 2;
+      default:
+        return -1;
+    }
+  }
+
+  /**
    * Get all the regex matching options
    * e.g. NUMBER vs all Operators Available
    *
    * @return string
+   * @throws \Exception
    */
   protected function getRegex(): string {
 
     $regex = [
       // regex to look for numbers e.g. 1, 1.2 or -2.3 and set group name to NUMBER
       sprintf('(?P<NUMBER>%s)', '\-?\d+\.?\d*(E-?\d+)?'),
+      // \-?\d+\.?\d*(E-?\d+)?
+      sprintf('(?P<BRACKET_LEFT>%s)', '\\('),
+      sprintf('(?P<BRACKET_RIGHT>%s)', '\\)'),
     ];
 
     // load in the available operators and merge with the number one
@@ -84,6 +170,7 @@ class Lexer {
    * Converts all the available operators into regex
    *
    * @return array
+   * @throws \Exception
    */
   protected function getAllOperatorsRegex(): array {
     $regex = [];
@@ -92,7 +179,7 @@ class Lexer {
     try {
       $refl = new ReflectionClass('Drupal\mathematical_field\Operators');
     } catch (\Exception $e) {
-      new \Exception($e->getMessage());
+      throw new \Exception($e->getMessage());
     }
 
     $allOperators = $refl->getConstants();
@@ -176,6 +263,20 @@ class Lexer {
    */
   public function getMatches(): array {
     return $this->matches;
+  }
+
+  /**
+   * @return string
+   */
+  public function getPostfix(): string {
+    return $this->postfix;
+  }
+
+  /**
+   * @param string $postfix
+   */
+  private function setPostfix(string $postfix): void {
+    $this->postfix = $postfix;
   }
 
 }
