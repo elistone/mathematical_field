@@ -1,0 +1,4 @@
+name: Mathematical Lexer Field
+description: 'Mathematical Lexer Field'
+type: module
+core: 8.x
