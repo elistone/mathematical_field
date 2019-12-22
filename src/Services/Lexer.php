@@ -127,12 +127,12 @@ class Lexer {
 
       // add numbers into the same array in between operators
       // so we end up with a whole number instead of separate numbers
-      if ($lastItem && is_numeric($lastItem) && is_numeric($char)) {
+      if ($lastItem !== FALSE && is_numeric($lastItem) && is_numeric($char)) {
         $output[$lastKey] = $output[$lastKey] . $char;
       }
       // handle negative numbers vs minus operator this is so we don't get things like: "- 3 - - 5" instead it will become "-3 - -5"
       // first check for the current char to be a number and the last added item to be a minus
-      elseif ($lastItem && is_numeric($char) && $lastItem === Operators::OP_MINUS) {
+      elseif ($lastItem !== FALSE && is_numeric($char) && $lastItem === Operators::OP_MINUS) {
         // if the one before that was numeric
         // add it to the next up list
         if (is_numeric($prev)) {
@@ -144,7 +144,7 @@ class Lexer {
         }
       }
       // this handles the float numbers making sure to create "5.5" instead of "5 . 5"
-      elseif ($lastItem && ((is_numeric($lastItem) && $char === ".") || $lastItem === "." && is_numeric($char))) {
+      elseif ($lastItem !== FALSE && ((is_numeric($lastItem) && $char === ".") || $lastItem === "." && is_numeric($char))) {
         $output[$lastKey] = $output[$lastKey] . $char;
       }
       // lastly everything else gets added to its own array

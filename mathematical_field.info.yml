@@ -1,4 +1,4 @@
-name: Mathematical Lexer Field
-description: 'Mathematical Lexer Field'
+name: Mathematical Field
+description: 'Mathematical Field'
 type: module
 core: 8.x

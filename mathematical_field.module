@@ -1,4 +1,15 @@
 <?php
 /**
- * mathematical_lexer_field.module
+ * mathematical_field.module
  */
+
+/**
+ * Implements hook_theme().
+ */
+function mathematical_field_theme() {
+  $info['mathematical_field'] = [
+    'variables' => [],
+  ];
+
+  return $info;
+}

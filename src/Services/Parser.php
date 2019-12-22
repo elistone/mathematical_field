@@ -34,11 +34,16 @@ class Parser {
    * @throws \Exception
    */
   public function calculate($string): Parser {
+    // reset the results
+    $this->reset();
+
+    // start up the lexer
     $lexer = new Lexer();
     $tokenize = $lexer->tokenizer($string);
     $sorted = $tokenize->sortPrecedence();
     $postfix = $sorted->getPostfix()->getResultArray();
 
+    // evaluate the result
     $this->evaluatePostfix($postfix);
 
     return $this;
@@ -142,6 +147,14 @@ class Parser {
    */
   private function setResult(array $result): void {
     $this->result = $result;
+  }
+
+  /**
+   * Make sure we empty out the whole stack and results
+   */
+  private function reset() {
+    $this->stack = [];
+    $this->result = [];
   }
 
 }

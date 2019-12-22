@@ -6,7 +6,7 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\mathematical_field\Services\Parser;
 
 /**
- * Tests
+ * Tests the Parser
  *
  * @coversDefaultClass \Drupal\mathematical_field\Services\Parser
  * @group mathematical_lexer_field
@@ -98,9 +98,11 @@ class ParserTest extends UnitTestCase {
    */
   public function withoutSpacesDataProvider() {
     return [
-      ["7-4+6- 2", 7],
-      ["5+ 3*6", 23],
-      ["7*3-10 /-2", 26],
+//      ["7-4+6- 2", 7],
+//      ["5+ 3*6", 23],
+//      ["7*3-10 /-2", 26],
+//      ["10+20-30+15*5", 75],
+      ["11    / 2 + 0.5*    6", 8.5],
     ];
   }
 

@@ -7,7 +7,7 @@ use Drupal\mathematical_field\Operators;
 use Drupal\mathematical_field\Services\Lexer;
 
 /**
- * Tests
+ * Tests the Lexer
  *
  * @coversDefaultClass \Drupal\mathematical_field\Services\Lexer
  * @group mathematical_lexer_field

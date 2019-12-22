@@ -1,0 +1,10 @@
+mathematical_field.mathematical:
+  version: 1.x
+  css:
+    theme:
+      css/mathematical.css: {}
+  js:
+    js/mathematical.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupalSettings
