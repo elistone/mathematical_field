@@ -2,8 +2,8 @@
 
 namespace Drupal\Tests\mathematical_lexer_field\Unit;
 
-use Drupal\mathematical_field\Operators;
 use Drupal\Tests\UnitTestCase;
+use Drupal\mathematical_field\Operators;
 use Drupal\mathematical_field\Services\Lexer;
 
 /**

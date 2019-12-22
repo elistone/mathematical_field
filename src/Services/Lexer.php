@@ -4,6 +4,7 @@ namespace Drupal\mathematical_field\Services;
 
 use Drupal\mathematical_field\InfixToPostfix;
 use Drupal\mathematical_field\Operators;
+use Drupal\views\Plugin\views\field\Boolean;
 use ReflectionClass;
 
 /**
@@ -14,14 +15,14 @@ use ReflectionClass;
 class Lexer {
 
   /**
-   * Stores an array of the operators used in the formula
+   * Stores an array of the operators used in the calculation
    *
    * @var array
    */
   private $operators = [];
 
   /**
-   * Stores the matches found from a formula
+   * Stores the matches found from a calculation
    *
    * @var array
    */
@@ -33,13 +34,6 @@ class Lexer {
    * @var InfixToPostfix
    */
   private $postfix = NULL;
-
-  /**
-   * Parser constructor.
-   */
-  public function __construct() {
-
-  }
 
   /**
    * Tokenize the string
@@ -65,6 +59,11 @@ class Lexer {
 
     // clean up matches
     $matches = $this->cleanupMatches($matches);
+
+    // check to make sure that the arithmetic is valid
+    if (!$this->isValidArithmetic($matches)) {
+      throw new \Exception('Invalid Arithmetic');
+    }
 
     // set the found matches
     $this->matches = $matches;
@@ -107,9 +106,11 @@ class Lexer {
    * @param string $string
    *
    * @return string
+   * @throws \Exception
    */
   protected function formatCalculationForTokenizer(string $string): string {
     $output = [];
+
     // remove all spaces
     $string = preg_replace('/\s+/', '', $string);
 
@@ -234,12 +235,13 @@ class Lexer {
             continue;
           }
 
+
           // get the value from first response
           $value = $info[0];
 
-          // if empty value (remove spaces)
+          // if empty value (remove spaces) but keep the zeros!
           // continue
-          if (empty($value)) {
+          if (empty($value) && !is_numeric($value)) {
             continue;
           }
 
@@ -259,6 +261,56 @@ class Lexer {
     }
 
     return $output;
+  }
+
+  /**
+   * Validates if the string entered is true mathematically calculation
+   * It does this by counting the number of operators and making sure there is
+   * the right amount of numbers to do a calculation
+   *
+   * @param $matches
+   *
+   * @return bool
+   */
+  protected function isValidArithmetic($matches): bool {
+    $numbers = 0;
+    $operators = 0;
+
+    // if we have matches
+    if (!empty($matches)) {
+      // loop thought all the matches
+      foreach ($matches as $match) {
+        // extract the type
+        $type = $match['TYPE'];
+
+        // if number increase number amount
+        if ($type === "NUMBER") {
+          $numbers++;
+        }
+        // if is one of the operators increase operators
+        elseif (strpos($type, 'OP_') !== FALSE) {
+          $operators++;
+        }
+
+      }
+    }
+
+    // if we have no numbers or no operators
+    // this is not a valid calculation
+    if ($numbers === 0 || $operators === 0) {
+      return FALSE;
+    }
+    // we need at least 2 numbers to do a calculation
+    elseif ($numbers < 2) {
+      return FALSE;
+    }
+    // the number of operators needs to be one less than the count of numbers
+    elseif ($operators != $numbers - 1) {
+      return FALSE;
+    }
+
+
+    return TRUE;
   }
 
   /**
