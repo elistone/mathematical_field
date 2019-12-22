@@ -209,12 +209,23 @@ class LexerTest extends UnitTestCase {
           ],
         ],
       ],
-      [
-        '1/2*3-4',
-        [
+    ];
+  }
 
-        ],
-      ],
+  /**
+   * Sort precedence data provider
+   *
+   * @return array
+   */
+  function sortingPrecedenceDataProvider() {
+    return [
+      ["1 + 1", "11+"],
+      ["12 - 2", "122-"],
+      ["3 * 2", "32*"],
+      ["10 / 2", "102/"],
+      ["5 * 2 / 2", "52*2/"],
+      ["100 + 100 - 50", "100100+50-"],
+      ["1 / 2 * 3 - 4", "12/3*4-"],
     ];
   }
 
@@ -246,15 +257,21 @@ class LexerTest extends UnitTestCase {
   public function testTokenizer($string, $expected) {
     $tokenize = $this->lexer->tokenizer($string);
     $matches = $tokenize->getMatches();
-    var_dump($matches);
     $this->assertEquals($expected, $matches);
   }
 
-  public function testSortingPrecedence() {
-    $tokenize = $this->lexer->tokenizer("1/2*3-4");
+  /**
+   * @param $string
+   * @param $expected
+   *
+   * @dataProvider sortingPrecedenceDataProvider
+   * @throws \Exception
+   */
+  public function testSortingPrecedence($string, $expected) {
+    $tokenize = $this->lexer->tokenizer($string);
     $sorted = $tokenize->sortPrecedence();
-    $postfix = $sorted->getPostfix();
-    $this->assertEquals("12/3*4-", $postfix);
+    $postfix = $sorted->getPostfix()->getResultString();
+    $this->assertEquals($expected, $postfix);
   }
 
   /**

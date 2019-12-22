@@ -2,6 +2,7 @@
 
 namespace Drupal\mathematical_field\Services;
 
+use Drupal\mathematical_field\InfixToPostfix;
 use Drupal\mathematical_field\Operators;
 use ReflectionClass;
 
@@ -29,9 +30,9 @@ class Lexer {
   /**
    * Stores the postfix value after being sorted
    *
-   * @var string
+   * @var InfixToPostfix
    */
-  private $postfix = "";
+  private $postfix = NULL;
 
   /**
    * Parser constructor.
@@ -49,6 +50,9 @@ class Lexer {
    * @throws \Exception
    */
   public function tokenizer(string $string): Lexer {
+    // make sure the string is formatted correctly
+    $string = $this->formatCalculationForTokenizer($string);
+
     // found the matches
     $matches = [];
 
@@ -76,44 +80,17 @@ class Lexer {
    * @throws \Exception
    */
   public function sortPrecedence(): Lexer {
+    // only sort if we have matches
     if (empty($this->getMatches())) {
       throw new \Exception('Cannot sort precedence without any matches');
     }
 
-    // store the results
-    $result = "";
-
-    // items that belong to the stack
-    $stack = [];
-
-    // loop thought all the matches
-    foreach ($this->getMatches() as $match) {
-      // separate into type & value
-      $type = $match['TYPE'];
-      $value = $match['VALUE'];
-
-      // if it is a number add straight to the results
-      if ($type === "NUMBER") {
-        $result .= $value;
-      }
-      // if is an operator
-      elseif (strpos($type, 'OP_') !== FALSE) {
-        // while it is empty loop thought the stack only adding items based upon precedence
-        while (!empty($stack) && $this->precedence($value) <= $this->precedence($stack[0])) {
-          $result .= array_pop($stack);
-        }
-        // add next operator into the stack to be sorted next time we are here.
-        $stack[] = $value;
-      }
-    }
-
-    // once all done make sure we empty the stack of results
-    while (!empty($stack)) {
-      $result .= array_pop($stack);
-    }
+    // use the infix to postfix class to convert
+    $infixToPostfix = new InfixToPostfix();
+    $results = $infixToPostfix->convert($this->getMatches());
 
     // set the postfix value
-    $this->setPostfix($result);
+    $this->setPostfix($results);
 
     // return this
     return $this;
@@ -121,23 +98,66 @@ class Lexer {
 
 
   /**
-   * The precedence value of each operator
+   * Formats the incoming calculation to try and make sure it is consistent for
+   * the tokenizer.
+   * For example:
+   * -3 - -5 & -3--5 becomes -3 - -5 to help the tokenizer recognise numbers vs
+   * operators
    *
-   * @param string $operator
+   * @param string $string
    *
-   * @return int
+   * @return string
    */
-  private function precedence(string $operator): int {
-    switch ($operator) {
-      case Operators::OP_MINUS:
-      case Operators::OP_PLUS:
-        return 1;
-      case Operators::OP_MULTIPLY:
-      case Operators::OP_DIVIDE:
-        return 2;
-      default:
-        return -1;
+  protected function formatCalculationForTokenizer(string $string): string {
+    $output = [];
+    // remove all spaces
+    $string = preg_replace('/\s+/', '', $string);
+
+    // go through each string
+    for ($i = 0; $i < strlen($string); $i++) {
+      // get the char
+      $char = $string[$i];
+      $prevKey = $i - 2;
+      $prev = $prevKey >= 0 ? $string[$prevKey] : FALSE;
+
+      // find the last key and item (if isset)
+      $lastKey = key(array_slice($output, -1, 1, TRUE));
+      $lastItem = $output[$lastKey] ?? FALSE;
+
+      // add numbers into the same array in between operators
+      // so we end up with a whole number instead of separate numbers
+      if ($lastItem && is_numeric($lastItem) && is_numeric($char)) {
+        $output[$lastKey] = $output[$lastKey] . $char;
+      }
+      // handle negative numbers vs minus operator this is so we don't get things like: "- 3 - - 5" instead it will become "-3 - -5"
+      // first check for the current char to be a number and the last added item to be a minus
+      elseif ($lastItem && is_numeric($char) && $lastItem === Operators::OP_MINUS) {
+        // if the one before that was numeric
+        // add it to the next up list
+        if (is_numeric($prev)) {
+          $output[$i] = $char;
+        }
+        else {
+          // otherwise join them together
+          $output[$lastKey] = $output[$lastKey] . $char;
+        }
+      }
+      // this handles the float numbers making sure to create "5.5" instead of "5 . 5"
+      elseif ($lastItem && ((is_numeric($lastItem) && $char === ".") || $lastItem === "." && is_numeric($char))) {
+        $output[$lastKey] = $output[$lastKey] . $char;
+      }
+      // lastly everything else gets added to its own array
+      else {
+        $output[$i] = $char;
+      }
+
     }
+
+    // now we split every time back out into a string with spaces
+    $output = implode($output, " ");
+
+    // return
+    return $output;
   }
 
   /**
@@ -152,9 +172,6 @@ class Lexer {
     $regex = [
       // regex to look for numbers e.g. 1, 1.2 or -2.3 and set group name to NUMBER
       sprintf('(?P<NUMBER>%s)', '\-?\d+\.?\d*(E-?\d+)?'),
-      // \-?\d+\.?\d*(E-?\d+)?
-      sprintf('(?P<BRACKET_LEFT>%s)', '\\('),
-      sprintf('(?P<BRACKET_RIGHT>%s)', '\\)'),
     ];
 
     // load in the available operators and merge with the number one
@@ -266,16 +283,16 @@ class Lexer {
   }
 
   /**
-   * @return string
+   * @return \Drupal\mathematical_field\InfixToPostfix
    */
-  public function getPostfix(): string {
+  public function getPostfix(): InfixToPostfix {
     return $this->postfix;
   }
 
   /**
-   * @param string $postfix
+   * @param \Drupal\mathematical_field\InfixToPostfix $postfix
    */
-  private function setPostfix(string $postfix): void {
+  private function setPostfix(InfixToPostfix $postfix): void {
     $this->postfix = $postfix;
   }
 
