@@ -1,0 +1,13 @@
+.mathematical-field {
+  margin-bottom: 30px;
+}
+
+.mathematical-field.has-errors .panel{
+  border-color: red;
+}
+
+.mathematical-field .panel {
+  margin-bottom: -11px;
+  padding-bottom: 12px;
+}
+

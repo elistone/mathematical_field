@@ -1,0 +1,46 @@
+{#
+/**
+ * @file
+ * Template for Mathematical Field implementation of the information field formatter.
+ *
+ * Variables:
+ * - input: The mathematical calcuation.
+ * - result: The result to the mathematical calcuation, will also contain the error message if set.
+ * - words: The result to the mathematical calcuation in word format.
+ * - errors: A flag to state if there were any errors.
+ *
+ * @see template_preprocess_mathematical_field()
+ *
+ * @ingroup themeable
+ */
+#}
+{% set classes = [
+  'mathematical-field',
+  errors ? 'has-errors',
+] %}
+<div {{ attributes.addClass(classes) }}>
+  {% if input %}
+    <div class="panel panel-input">
+      <h3 class="panel__title">{{ 'Input'|t }}:</h3>
+      <div class="panel__content">
+        {{ input }}
+      </div>
+    </div>
+  {% endif %}
+  <div class="panel panel-result">
+    <h3 class="panel__title">{{ 'Result'|t }}:</h3>
+    <div class="panel__content">
+      {{ result }}
+    </div>
+  </div>
+  {% if words %}
+    <div class="panel panel-words">
+      <h3 class="panel__title">{{ 'Number name'|t }}:</h3>
+      <div class="panel__content">
+        {{ words }}
+      </div>
+    </div>
+  {% endif %}
+</div>
+
+

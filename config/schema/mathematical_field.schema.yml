@@ -1,0 +1,10 @@
+field.formatter.settings.mathematical_field_basic:
+  type: mapping
+  label: 'Basic mathematical field formatter'
+  mapping:
+    input:
+      type: int
+      label: 'Input'
+    words:
+      type: int
+      label: 'Words'

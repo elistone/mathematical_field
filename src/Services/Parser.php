@@ -26,6 +26,13 @@ class Parser {
   private $stack = [];
 
   /**
+   * Store the lexer
+   *
+   * @var \Drupal\mathematical_field\Services\Lexer
+   */
+  private $lexer;
+
+  /**
    * Calculate the calculation result
    *
    * @param $string
@@ -38,8 +45,7 @@ class Parser {
     $this->reset();
 
     // start up the lexer
-    $lexer = new Lexer();
-    $tokenize = $lexer->tokenizer($string);
+    $tokenize = $this->lexer->tokenizer($string);
     $sorted = $tokenize->sortPrecedence();
     $postfix = $sorted->getPostfix()->getResultArray();
 
@@ -155,6 +161,16 @@ class Parser {
   private function reset() {
     $this->stack = [];
     $this->result = [];
+    $this->lexer = new Lexer();
+  }
+
+  /**
+   * Get information from the lexer
+   *
+   * @return \Drupal\mathematical_field\Services\Lexer
+   */
+  public function getLexer(): \Drupal\mathematical_field\Services\Lexer {
+    return $this->lexer;
   }
 
 }

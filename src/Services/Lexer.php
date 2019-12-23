@@ -22,6 +22,13 @@ class Lexer {
   private $operators = [];
 
   /**
+   * Stores the string input
+   *
+   * @var string
+   */
+  private $string = "";
+
+  /**
    * Stores the matches found from a calculation
    *
    * @var array
@@ -46,6 +53,7 @@ class Lexer {
   public function tokenizer(string $string): Lexer {
     // make sure the string is formatted correctly
     $string = $this->formatCalculationForTokenizer($string);
+    $this->setString($string);
 
     // found the matches
     $matches = [];
@@ -346,6 +354,20 @@ class Lexer {
    */
   private function setPostfix(InfixToPostfix $postfix): void {
     $this->postfix = $postfix;
+  }
+
+  /**
+   * @return string
+   */
+  public function getString(): string {
+    return $this->string;
+  }
+
+  /**
+   * @param string $string
+   */
+  private function setString(string $string): void {
+    $this->string = $string;
   }
 
 }

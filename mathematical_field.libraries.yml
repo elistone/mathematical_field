@@ -1,4 +1,4 @@
-mathematical_field.mathematical:
+mathematical.field-formatter:
   version: 1.x
   css:
     theme:
@@ -8,3 +8,4 @@ mathematical_field.mathematical:
   dependencies:
     - core/jquery
     - core/drupalSettings
+
