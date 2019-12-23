@@ -2,12 +2,23 @@
   margin-bottom: 30px;
 }
 
-.mathematical-field.has-errors .panel{
+.mathematical-field.has-errors .panel {
   border-color: red;
 }
 
 .mathematical-field .panel {
   margin-bottom: -11px;
   padding-bottom: 12px;
+}
+
+.mathematical-field .hover-text {
+  font-size: 12px;
+  font-style: italic;
+  margin-top: 5px;
+}
+
+.mathematical-field .has-hover,
+.mathematical-field .has-hover:hover {
+  cursor: pointer;
 }
 

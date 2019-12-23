@@ -8,3 +8,6 @@ field.formatter.settings.mathematical_field_basic:
     words:
       type: int
       label: 'Words'
+    hover:
+      type: int
+      label: 'Hover'

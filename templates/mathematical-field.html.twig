@@ -29,8 +29,12 @@
   {% endif %}
   <div class="panel panel-result">
     <h3 class="panel__title">{{ 'Result'|t }}:</h3>
-    <div class="panel__content">
-      {{ result }}
+    <div class="panel__content {% if hover %} has-hover {% endif %}" data-hover="{{ hover }}" data-result="{{ result }}" data-calculation="{{ input }}">
+      {% if hover %}
+        {{ 'Loading...'|t }}
+      {% else %}
+        {{ result }}
+      {% endif %}
     </div>
   </div>
   {% if words %}

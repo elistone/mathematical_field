@@ -28,6 +28,7 @@ class MathematicalFieldFormatter extends FormatterBase {
     return [
         'input' => TRUE,
         'words' => TRUE,
+        'hover' => TRUE,
       ] + parent::defaultSettings();
   }
 
@@ -50,6 +51,12 @@ class MathematicalFieldFormatter extends FormatterBase {
       '#description' => $this->t('If enabled the answer to the calculation will be displayed in words.'),
       '#default_value' => $this->getSetting('words'),
     ];
+    $form['hover'] = [
+      '#title' => $this->t('Hover for results'),
+      '#type' => 'checkbox',
+      '#description' => $this->t('If enabled hovering over the calculation will reveal the result.'),
+      '#default_value' => $this->getSetting('hover'),
+    ];
     return $form;
   }
 
@@ -61,6 +68,7 @@ class MathematicalFieldFormatter extends FormatterBase {
     $summary[] = $this->t('Displays a mathematical calculation.');
     $summary[] = $this->t('Display input: @input', ['@input' => $this->getSetting('input') ? 'True' : 'False']);
     $summary[] = $this->t('Display in words: @words', ['@words' => $this->getSetting('words') ? 'True' : 'False']);
+    $summary[] = $this->t('Hover for results: @words', ['@words' => $this->getSetting('hover') ? 'True' : 'False']);
     return $summary;
   }
 
@@ -114,6 +122,7 @@ class MathematicalFieldFormatter extends FormatterBase {
         '#input' => $input,
         '#words' => $words,
         '#errors' => $error,
+        '#hover' => $this->getSetting('hover') && !$error,
         '#attached' => ['library' => ['mathematical_field/mathematical.field-formatter']],
       ];
     }

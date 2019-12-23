@@ -8,4 +8,5 @@ mathematical.field-formatter:
   dependencies:
     - core/jquery
     - core/drupalSettings
+    - core/drupal
 

@@ -98,10 +98,10 @@ class ParserTest extends UnitTestCase {
    */
   public function withoutSpacesDataProvider() {
     return [
-//      ["7-4+6- 2", 7],
-//      ["5+ 3*6", 23],
-//      ["7*3-10 /-2", 26],
-//      ["10+20-30+15*5", 75],
+      ["7-4+6- 2", 7],
+      ["5+ 3*6", 23],
+      ["7*3-10 /-2", 26],
+      ["10+20-30+15*5", 75],
       ["11    / 2 + 0.5*    6", 8.5],
     ];
   }
@@ -125,6 +125,20 @@ class ParserTest extends UnitTestCase {
       ["/"],
       ["*"],
       ["-1"],
+    ];
+  }
+
+  /**
+   * Divide By Zero data provider
+   *
+   * @return array
+   */
+  public function divideByZeroDataProvider() {
+    return [
+      ["10 / 0"],
+      ["10 / 0.0"],
+      ["10 / -0"],
+      ["10 / -0.0"],
     ];
   }
 
@@ -171,9 +185,16 @@ class ParserTest extends UnitTestCase {
     }
   }
 
-  public function testDivideByZero() {
+  /**
+   * Test to see if dividing by zero causes the correct error message
+   *
+   * @param $string
+   *
+   * @dataProvider divideByZeroDataProvider
+   */
+  public function testDivideByZero($string) {
     try {
-      $this->parser->calculate("10 / 0")->getResult();
+      $this->parser->calculate($string)->getResult();
     } catch (\Exception $e) {
       $this->assertEquals("I don't think you want to do that... (Divided by zero)", $e->getMessage());
     }
