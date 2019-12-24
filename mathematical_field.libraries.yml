@@ -9,4 +9,7 @@ mathematical.field-formatter:
     - core/jquery
     - core/drupalSettings
     - core/drupal
+mathematical.jumble:
+  js:
+    js/react/dist/index.js: { preprocess: false }
 
