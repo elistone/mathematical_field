@@ -6,8 +6,11 @@ class Calculation extends Component {
   render() {
     return (
       <>
-        <Equation equation={this.props.equation} moveTile={this.props.moveTile}/>
-        {/*<Result result={this.props.result}/>*/}
+        <Equation equation={this.props.equation}
+                  moveTile={this.props.moveTile}
+                  calculateResult={this.props.calculateResult}
+                  canDrag={this.props.canDrag}/>
+        <Result result={this.props.result}/>
       </>
     )
   }

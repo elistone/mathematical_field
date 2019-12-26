@@ -12,7 +12,8 @@ class App extends Component {
     // set local state
     this.state = {
       result: "0",
-      equation: "11+22",
+      equation: this.props.dataset.input,
+      canDrag: false,
       equationArray: [],
     };
   }
@@ -31,17 +32,26 @@ class App extends Component {
    * Will at some point use the equation to get the correct result
    * at the moment creates a random number to prove a point
    */
-  getResult() {
+  getResult = () => {
+    const that = this;
     const num = Math.floor(Math.random() * 999 + 1).toString();
     this.setState({
-      result: num,
+      result: "Loading...",
+      canDrag: false,
     });
-  }
+
+    setTimeout(function () {
+      that.setState({
+        result: num,
+        canDrag: true,
+      });
+    }, 1000);
+  };
 
   /**
    * Converts the equation value to an array
    */
-  equationToArray() {
+  equationToArray = () => {
     let output = [];
 
     // splits the string and creates a object that gets
@@ -79,12 +89,15 @@ class App extends Component {
 
   // render setting a calculation
   render() {
-    const {equationArray, result} = this.state;
+    const {equationArray, result, canDrag} = this.state;
 
     return (
       <div className="calculation">
-        <Calculation equation={equationArray} result={result}
-                     moveTile={this.moveTile}/>
+        <Calculation equation={equationArray}
+                     result={result}
+                     canDrag={canDrag}
+                     moveTile={this.moveTile}
+                     calculateResult={this.getResult}/>
       </div>
     )
   }

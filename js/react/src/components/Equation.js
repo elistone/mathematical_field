@@ -11,8 +11,12 @@ class Equation extends Component {
         <DndProvider backend={HTML5Backend}>
           {this.props.equation.map((e, i) => {
             return (
-              <Tile key={i} value={e.value} index={i} isDraggable={true}
-                    moveTile={this.props.moveTile}/>)
+              <Tile key={i}
+                    value={e.value}
+                    index={i}
+                    isDraggable={this.props.canDrag}
+                    moveTile={this.props.moveTile}
+                    calculateResult={this.props.calculateResult}/>)
           })}
         </DndProvider>
       </div>

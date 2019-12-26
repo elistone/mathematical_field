@@ -41901,6 +41901,42 @@ function (_Component) {
     // makes this refer to this component
     _this = _possibleConstructorReturn(this, _getPrototypeOf(App).call(this, props)); // set local state
 
+    _defineProperty(_assertThisInitialized(_this), "getResult", function () {
+      var that = _assertThisInitialized(_this);
+
+      var num = Math.floor(Math.random() * 999 + 1).toString();
+
+      _this.setState({
+        result: "Loading...",
+        canDrag: false
+      });
+
+      setTimeout(function () {
+        that.setState({
+          result: num,
+          canDrag: true
+        });
+      }, 1000);
+    });
+
+    _defineProperty(_assertThisInitialized(_this), "equationToArray", function () {
+      var output = []; // splits the string and creates a object that gets
+      // added to an array
+
+      _this.state.equation.split("").map(function (value, i) {
+        var data = {
+          id: i,
+          value: value
+        };
+        output.push(data);
+      }); // update the state
+
+
+      _this.setState({
+        equationArray: output
+      });
+    });
+
     _defineProperty(_assertThisInitialized(_this), "moveTile", function (dragIndex, hoverIndex) {
       if (typeof dragIndex !== "undefined") {
         var dragTile = _this.state.equationArray[dragIndex];
@@ -41918,7 +41954,8 @@ function (_Component) {
 
     _this.state = {
       result: "0",
-      equation: "11+22",
+      equation: _this.props.dataset.input,
+      canDrag: false,
       equationArray: []
     };
     return _this;
@@ -41942,48 +41979,21 @@ function (_Component) {
      */
 
   }, {
-    key: "getResult",
-    value: function getResult() {
-      var num = Math.floor(Math.random() * 999 + 1).toString();
-      this.setState({
-        result: num
-      });
-    }
-    /**
-     * Converts the equation value to an array
-     */
-
-  }, {
-    key: "equationToArray",
-    value: function equationToArray() {
-      var output = []; // splits the string and creates a object that gets
-      // added to an array
-
-      this.state.equation.split("").map(function (value, i) {
-        var data = {
-          id: i,
-          value: value
-        };
-        output.push(data);
-      }); // update the state
-
-      this.setState({
-        equationArray: output
-      });
-    }
-  }, {
     key: "render",
     // render setting a calculation
     value: function render() {
       var _this$state = this.state,
           equationArray = _this$state.equationArray,
-          result = _this$state.result;
+          result = _this$state.result,
+          canDrag = _this$state.canDrag;
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "calculation"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_Calculation__WEBPACK_IMPORTED_MODULE_1__["default"], {
         equation: equationArray,
         result: result,
-        moveTile: this.moveTile
+        canDrag: canDrag,
+        moveTile: this.moveTile,
+        calculateResult: this.getResult
       }));
     }
   }]);
@@ -42046,7 +42056,11 @@ function (_Component) {
     value: function render() {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Equation__WEBPACK_IMPORTED_MODULE_1__["default"], {
         equation: this.props.equation,
-        moveTile: this.props.moveTile
+        moveTile: this.props.moveTile,
+        calculateResult: this.props.calculateResult,
+        canDrag: this.props.canDrag
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Result__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        result: this.props.result
       }));
     }
   }]);
@@ -42120,8 +42134,9 @@ function (_Component) {
           key: i,
           value: e.value,
           index: i,
-          isDraggable: true,
-          moveTile: _this.props.moveTile
+          isDraggable: _this.props.canDrag,
+          moveTile: _this.props.moveTile,
+          calculateResult: _this.props.calculateResult
         });
       })));
     }
@@ -42145,7 +42160,9 @@ function (_Component) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _Tile__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Tile */ "./src/components/Tile.js");
+/* harmony import */ var react_dnd__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dnd */ "./node_modules/react-dnd/dist/esm/index.js");
+/* harmony import */ var react_dnd_html5_backend__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-dnd-html5-backend */ "./node_modules/react-dnd-html5-backend/dist/esm/index.js");
+/* harmony import */ var _Tile__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Tile */ "./src/components/Tile.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -42167,6 +42184,8 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+
+
 var Result =
 /*#__PURE__*/
 function (_Component) {
@@ -42183,15 +42202,17 @@ function (_Component) {
     value: function render() {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "result"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Tile__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_dnd__WEBPACK_IMPORTED_MODULE_1__["DndProvider"], {
+        backend: react_dnd_html5_backend__WEBPACK_IMPORTED_MODULE_2__["default"]
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Tile__WEBPACK_IMPORTED_MODULE_3__["default"], {
         value: "="
       }), this.props.result.split("").map(function (value, i) {
-        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Tile__WEBPACK_IMPORTED_MODULE_1__["default"], {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Tile__WEBPACK_IMPORTED_MODULE_3__["default"], {
           key: i,
           value: value,
           isDraggable: false
         });
-      }));
+      })));
     }
   }]);
 
@@ -42275,8 +42296,31 @@ function (_Component) {
         marginBottom: '.5rem',
         backgroundColor: 'white',
         cursor: _this.props.isDraggable ? 'move' : 'default',
-        display: 'inline-block'
+        display: 'inline-block',
+        color: _this.getColour(_this.props.value)
       };
+    });
+
+    _defineProperty(_assertThisInitialized(_this), "getColour", function (value) {
+      // trim the string
+      value = value.trim(); // number
+
+      if (!isNaN(value)) {
+        return 'blue';
+      } // operators
+
+
+      if (value === "+" || value === "-" || value === "/" || value === "*") {
+        return 'orange';
+      } // equals sign
+
+
+      if (value === "=") {
+        return 'green';
+      } // anything else
+
+
+      return 'red';
     });
 
     return _this;
@@ -42290,12 +42334,19 @@ function (_Component) {
           isDragging = _this$props.isDragging,
           connectDragSource = _this$props.connectDragSource,
           connectDropTarget = _this$props.connectDropTarget;
-      var opacity = isDragging ? 0.25 : 1;
-      return connectDragSource(connectDropTarget(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      var opacity = isDragging ? 0.25 : 1; // the template
+
+      var jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         style: _objectSpread({}, this.getTileStyles(), {
           opacity: opacity
         })
-      }, value)));
+      }, value); // if is draggable enable the dragging and dropping
+
+      if (this.props.isDraggable) {
+        return connectDragSource(connectDropTarget(jsx));
+      } else {
+        return jsx;
+      }
     }
   }]);
 
@@ -42312,7 +42363,7 @@ var tileSource = {
   endDrag: function endDrag(props, monitor) {
     var item = monitor.getItem();
     var dropResult = monitor.getDropResult();
-    console.log('endDrag');
+    props.calculateResult();
   }
 };
 var tileTarget = {

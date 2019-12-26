@@ -13,19 +13,50 @@ class Tile extends Component {
       marginBottom: '.5rem',
       backgroundColor: 'white',
       cursor: this.props.isDraggable ? 'move' : 'default',
-      display: 'inline-block'
+      display: 'inline-block',
+      color: this.getColour(this.props.value)
     }
+  };
+
+  // colour up the types of value
+  getColour = (value) => {
+    // trim the string
+    value = value.trim();
+
+    // number
+    if (!isNaN(value)) {
+      return 'blue';
+    }
+    // operators
+    if (value === "+" || value === "-" || value === "/" || value === "*") {
+      return 'orange';
+    }
+    // equals sign
+    if (value === "=") {
+      return 'green';
+    }
+    // anything else
+    return 'red';
   };
 
   render() {
     const {value, isDragging, connectDragSource, connectDropTarget} = this.props;
     const opacity = isDragging ? 0.25 : 1;
 
-    return connectDragSource(connectDropTarget(
-      <div style={{...this.getTileStyles(), opacity}}>
-        {value}
-      </div>
-    ))
+    // the template
+    const jsx = <div style={{...this.getTileStyles(), opacity}}>
+      {value}
+    </div>;
+
+    // if is draggable enable the dragging and dropping
+    if (this.props.isDraggable) {
+      return connectDragSource(connectDropTarget(
+        jsx
+      ))
+    }
+    else {
+      return jsx;
+    }
   }
 }
 
@@ -41,7 +72,7 @@ const tileSource = {
   endDrag(props, monitor) {
     const item = monitor.getItem();
     const dropResult = monitor.getDropResult();
-    console.log('endDrag');
+    props.calculateResult();
   }
 };
 
