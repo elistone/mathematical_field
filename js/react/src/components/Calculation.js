@@ -3,12 +3,11 @@ import Equation from "./Equation";
 import Result from "./Result";
 
 class Calculation extends Component {
-
   render() {
     return (
       <>
-        <Equation equation={this.props.equation}/>
-        <Result result={this.props.result}/>
+        <Equation equation={this.props.equation} moveTile={this.props.moveTile}/>
+        {/*<Result result={this.props.result}/>*/}
       </>
     )
   }

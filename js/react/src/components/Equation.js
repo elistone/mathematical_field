@@ -1,4 +1,6 @@
 import React, {Component} from 'react'
+import {DndProvider} from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
 import Tile from "./Tile";
 
 class Equation extends Component {
@@ -6,9 +8,13 @@ class Equation extends Component {
   render() {
     return (
       <div className="equation">
-        {this.props.equation.split("").map((value, i) => {
-          return (<Tile key={i} value={value} isDraggable={true}/>)
-        })}
+        <DndProvider backend={HTML5Backend}>
+          {this.props.equation.map((e, i) => {
+            return (
+              <Tile key={i} value={e.value} index={i} isDraggable={true}
+                    moveTile={this.props.moveTile}/>)
+          })}
+        </DndProvider>
       </div>
     )
   }

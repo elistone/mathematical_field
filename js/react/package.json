@@ -16,6 +16,7 @@
   "license": "ISC",
   "dependencies": {
     "immutability-helper": "^3.0.1",
+    "lodash.flow": "^3.5.0",
     "prop-types": "^15.7.2",
     "react": "^16.12.0",
     "react-dnd": "^10.0.2",
