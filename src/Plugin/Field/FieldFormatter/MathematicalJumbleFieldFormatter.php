@@ -36,9 +36,11 @@ class MathematicalJumbleFieldFormatter extends FormatterBase {
 
     // loop thought each item
     foreach ($items as $delta => $item) {
+      $input = preg_replace('/\s+/', '', $item->value);
+
       // build the output using the mathematical_field template
       $element[$delta] = [
-        '#markup' => '<div id="jumble-field"></div>',
+        '#markup' => '<div id="jumble-field" data-input="' . $input . '"></div>',
         '#attached' => ['library' => ['mathematical_field/mathematical.jumble']],
       ];
     }

@@ -1,9 +1,8 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import React from 'react'
+import ReactDOM from 'react-dom'
+import App from "./App";
 
-import Page from './components/Page';
-
+const app = document.getElementById('jumble-field');
 ReactDOM.render(
-<Page />,
-  document.getElementById('jumble-field')
+  <App dataset={app.dataset}/>, app
 );
