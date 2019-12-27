@@ -4,7 +4,6 @@ namespace Drupal\mathematical_field\Services;
 
 use Drupal\mathematical_field\InfixToPostfix;
 use Drupal\mathematical_field\Operators;
-use Drupal\views\Plugin\views\field\Boolean;
 use ReflectionClass;
 
 /**

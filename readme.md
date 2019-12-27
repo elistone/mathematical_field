@@ -58,9 +58,65 @@ Settings for the field formatter can be found on the `Manage display` page and i
 2. `Display in words` - As well as showing the result as a number you can display it as a word.
 3. `Hover for results` - Instead of just showing the result as a number it will display the calculation and on hover show the result.
 
+![Mathematical Example](https://imgur.com/NYlnvOk)
+
+![Mathematical Hover Example](https://media.giphy.com/media/JROqIgxwwJArHoHnMQ/giphy.gif)
+
 
 ### Mathematical (Jumble)
 
 The Mathematical (Jumble) format gives a more interactive way to display the calculation, with the ability to move numbers and operators around to see what happens to the result in real time.
 
 There are currently now settings for this formatter.
+
+![Mathematical Jumble Example](https://media.giphy.com/media/TL6epnb9u2QZSWe9mo/giphy.gif)
+
+
+## Service
+
+This module contains two services which if so required can be used in 3rd-party applications.
+
+The Lexer, which converts a calculation into a format that the Parser can use to work out the result, using the Lexer can do the following, tokenize the string, sorting the precedence and convert from infix to postfix.
+
+The Parser, uses the Lexer and then takes this information to return a result.
+
+
+### Lexer
+
+To use the Lexer you can use the following:
+
+```php
+
+$string = "1 + 1";
+
+$mathematicalLexer = \Drupal::service('mathematical_field.lexer');
+
+$tokenize = $mathematicalLexer->tokenizer($string);
+$sorted = $tokenize->sortPrecedence();
+$postfix = $sorted->getPostfix()->getResultString();
+
+print $postfix; // returns 11+
+
+```
+
+### Parser
+
+To calculate results from string you can simply use:
+
+```php
+
+$input = "1 + 1";
+
+$mathematicalParser = \Drupal::service('mathematical_field.parser');
+
+try {
+  // get the result
+  $result = $mathematicalParser->calculate($input)->getResult();
+} catch (\Exception $e) {
+  // if error set the error variable and result to the error message
+  $result = $this->t($e->getMessage());
+}
+
+print $result; // returns 2
+
+```
