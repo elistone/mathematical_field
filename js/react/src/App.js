@@ -1,4 +1,5 @@
 import React, {Component, useCallback} from 'react'
+import axios from 'axios'
 import Calculation from "./components/Calculation";
 
 class App extends Component {
@@ -12,8 +13,8 @@ class App extends Component {
     // set local state
     this.state = {
       result: "0",
-      equation: this.props.dataset.input,
       canDrag: false,
+      equation: this.props.dataset.input,
       equationArray: [],
     };
   }
@@ -33,19 +34,24 @@ class App extends Component {
    * at the moment creates a random number to prove a point
    */
   getResult = () => {
-    const that = this;
-    const num = Math.floor(Math.random() * 999 + 1).toString();
     this.setState({
       result: "Loading...",
       canDrag: false,
     });
 
-    setTimeout(function () {
-      that.setState({
-        result: num,
-        canDrag: true,
-      });
-    }, 1000);
+    const equation = this.state.equation;
+    const url = '/api/mathematical-field/calculation';
+    const input = '?input=' + encodeURIComponent(equation);
+
+    // TODO handle the errors
+    axios.get(url + input)
+      .then(response => {
+        console.log("result", response.data.result.toString());
+        this.setState({
+          result: response.data.result.toString(),
+          canDrag: true,
+        });
+      })
   };
 
   /**
@@ -53,6 +59,7 @@ class App extends Component {
    */
   equationToArray = () => {
     let output = [];
+    let string = "";
 
     // splits the string and creates a object that gets
     // added to an array
@@ -64,11 +71,12 @@ class App extends Component {
       output.push(data);
     });
 
+
     // update the state
     this.setState({
       equationArray: output,
     });
-  }
+  };
 
   moveTile = (dragIndex, hoverIndex) => {
     if (typeof dragIndex !== "undefined") {
@@ -80,12 +88,19 @@ class App extends Component {
       // insert the new information into the order
       tilesOrder.splice(hoverIndex, 0, dragTile);
 
+      // convert the new tile order into a string
+      const string = tilesOrder.reduce((output, tile) => {
+        output.push(tile.value);
+        return output;
+      }, []).join("");
+
       // update the state
       this.setState({
+        equation: string,
         equationArray: tilesOrder,
       });
     }
-  }
+  };
 
   // render setting a calculation
   render() {

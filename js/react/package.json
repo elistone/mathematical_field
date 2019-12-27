@@ -15,6 +15,7 @@
   "author": "Eli Stone",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.19.0",
     "immutability-helper": "^3.0.1",
     "lodash.flow": "^3.5.0",
     "prop-types": "^15.7.2",

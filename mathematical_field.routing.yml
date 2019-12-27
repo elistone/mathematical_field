@@ -1,0 +1,7 @@
+mathematical_field.calculation:
+  path: 'api/mathematical-field/calculation'
+  defaults:
+    _controller: '\Drupal\mathematical_field\Controller\MathematicalFieldRestController::getCalculation'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
