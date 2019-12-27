@@ -58,10 +58,9 @@ Settings for the field formatter can be found on the `Manage display` page and i
 2. `Display in words` - As well as showing the result as a number you can display it as a word.
 3. `Hover for results` - Instead of just showing the result as a number it will display the calculation and on hover show the result.
 
-![Mathematical Example](https://imgur.com/NYlnvOk)
+![Mathematical Example](https://i.imgur.com/NYlnvOk.png)
 
 ![Mathematical Hover Example](https://media.giphy.com/media/JROqIgxwwJArHoHnMQ/giphy.gif)
-
 
 ### Mathematical (Jumble)
 
