@@ -2,7 +2,10 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import App from "./App";
 
-const app = document.getElementById('jumble-field');
-ReactDOM.render(
-  <App dataset={app.dataset}/>, app
-);
+const applications = document.getElementsByClassName('jumble-field');
+
+for (let app of applications) {
+  ReactDOM.render(
+    <App dataset={app.dataset}/>, app
+  );
+}

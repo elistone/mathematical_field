@@ -43,17 +43,24 @@ You can also upgrade any existing `Text (plain)` & `Text (plain, long)` by simpl
 
 ## Display Options
 
-There are two Display options within this module.
+There are two display options within this module.
 
 1. Mathematical - This is the simplest display option, it can be as simple as just showing the result or as complex as showing input, result number, result words and display result on hover.  
-2. Mathematical (Jumble) - Coming soon.
+2. Mathematical (Jumble) - This outputs the field as part of a React application and gives you the ability to change the equation using the values from the set input.
 
 ### Mathematical
 
-The Mathematical field format will display your calculation result and has options to to show more information.
+The Mathematical format will display your calculation result and has options to to show more information.
 
 Settings for the field formatter can be found on the `Manage display` page and include the following:
 
 1. `Display input` - As well as showing the result you can display the calculation.
 2. `Display in words` - As well as showing the result as a number you can display it as a word.
 3. `Hover for results` - Instead of just showing the result as a number it will display the calculation and on hover show the result.
+
+
+### Mathematical (Jumble)
+
+The Mathematical (Jumble) format gives a more interactive way to display the calculation, with the ability to move numbers and operators around to see what happens to the result in real time.
+
+There are currently now settings for this formatter.

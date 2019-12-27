@@ -40,7 +40,7 @@ class MathematicalJumbleFieldFormatter extends FormatterBase {
 
       // build the output using the mathematical_field template
       $element[$delta] = [
-        '#markup' => '<div id="jumble-field" data-input="' . $input . '"></div>',
+        '#markup' => '<div class="jumble-field" data-input="' . $input . '"></div>',
         '#attached' => ['library' => ['mathematical_field/mathematical.jumble']],
       ];
     }
