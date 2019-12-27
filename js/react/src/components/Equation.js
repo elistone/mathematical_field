@@ -7,7 +7,7 @@ class Equation extends Component {
 
   render() {
     return (
-      <div className="equation">
+      <div style={styles} className="equation">
         <DndProvider backend={HTML5Backend}>
           {this.props.equation.map((e, i) => {
             return (
@@ -23,5 +23,9 @@ class Equation extends Component {
     )
   }
 }
+
+const styles = {
+  display: "inline-block"
+};
 
 export default Equation;

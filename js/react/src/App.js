@@ -14,6 +14,7 @@ class App extends Component {
     this.state = {
       result: "0",
       canDrag: false,
+      isLoading: false,
       equation: this.props.dataset.input,
       equationArray: [],
     };
@@ -34,24 +35,57 @@ class App extends Component {
    * at the moment creates a random number to prove a point
    */
   getResult = () => {
-    this.setState({
-      result: "Loading...",
+    const that = this;
+
+    that.setState({
+      result: "0",
       canDrag: false,
+      isLoading: true,
     });
 
     const equation = this.state.equation;
     const url = '/api/mathematical-field/calculation';
     const input = '?input=' + encodeURIComponent(equation);
 
-    // TODO handle the errors
+    // make a call to get the calculation
     axios.get(url + input)
       .then(response => {
-        console.log("result", response.data.result.toString());
-        this.setState({
+
+        // if success update the status
+        that.setState({
           result: response.data.result.toString(),
-          canDrag: true,
+          hasError: false,
         });
-      })
+
+      }).catch(function (error) {
+      // handle the errors
+      if (error.response) {
+        const data = error.response.data;
+
+        if (data) {
+          // Request made and server responded
+          that.setState({
+            result: data.result.toString(),
+          });
+        }
+
+      }
+      else if (error.request) {
+        // The request was made but no response was received
+        console.error(error.request);
+      }
+      else {
+        // Something happened in setting up the request that triggered an Error
+        console.error('Error', error.message);
+      }
+    }).finally(function () {
+      // change the is loading and can drag information
+      that.setState({
+        canDrag: true,
+        isLoading: false,
+      });
+
+    });
   };
 
   /**
@@ -59,7 +93,6 @@ class App extends Component {
    */
   equationToArray = () => {
     let output = [];
-    let string = "";
 
     // splits the string and creates a object that gets
     // added to an array
@@ -104,18 +137,23 @@ class App extends Component {
 
   // render setting a calculation
   render() {
-    const {equationArray, result, canDrag} = this.state;
+    const {equationArray, result, canDrag, isLoading} = this.state;
 
     return (
-      <div className="calculation">
+      <div style={styles} className="calculation">
         <Calculation equation={equationArray}
                      result={result}
                      canDrag={canDrag}
+                     isLoading={isLoading}
                      moveTile={this.moveTile}
                      calculateResult={this.getResult}/>
       </div>
     )
   }
 }
+
+const styles = {
+  margin: "10px 0"
+};
 
 export default App;

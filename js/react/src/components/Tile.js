@@ -3,6 +3,7 @@ import {findDOMNode} from 'react-dom';
 import {DragSource, DropTarget} from 'react-dnd';
 import flow from 'lodash/flow';
 import PropTypes from 'prop-types'
+import Loading from "./Loading";
 
 class Tile extends Component {
 
@@ -12,9 +13,10 @@ class Tile extends Component {
       padding: '0.5rem 1rem',
       marginBottom: '.5rem',
       backgroundColor: 'white',
-      cursor: this.props.isDraggable ? 'move' : 'default',
       display: 'inline-block',
-      color: this.getColour(this.props.value)
+      margin: '0 0.125rem',
+      cursor: this.props.isDraggable ? 'move' : 'default',
+      color: this.getColour(this.props.value),
     }
   };
 
@@ -40,8 +42,20 @@ class Tile extends Component {
   };
 
   render() {
-    const {value, isDragging, connectDragSource, connectDropTarget} = this.props;
+    let {value} = this.props;
+    const {isDragging, connectDragSource, connectDropTarget} = this.props;
     const opacity = isDragging ? 0.25 : 1;
+
+    // convert empty values to spaces
+    if (value.trim() === "") {
+      value = "\u00A0";
+    }
+
+    // if is the loader tile
+    // display the loader
+    if (this.props.isLoader) {
+      value = <Loading/>
+    }
 
     // the template
     const jsx = <div style={{...this.getTileStyles(), opacity}}>
@@ -69,6 +83,11 @@ const tileSource = {
     };
   },
 
+  /**
+   * when drag ends send recalculate the result
+   * @param props
+   * @param monitor
+   */
   endDrag(props, monitor) {
     const item = monitor.getItem();
     const dropResult = monitor.getDropResult();
@@ -127,6 +146,7 @@ const tileTarget = {
 Tile.propTypes = {
   value: PropTypes.string.isRequired,
   isDraggable: PropTypes.bool,
+  isLoader: PropTypes.bool,
 };
 
 export default flow(DragSource("TILE", tileSource, (connect, monitor) => ({

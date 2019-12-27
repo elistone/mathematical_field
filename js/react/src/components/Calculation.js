@@ -10,10 +10,11 @@ class Calculation extends Component {
                   moveTile={this.props.moveTile}
                   calculateResult={this.props.calculateResult}
                   canDrag={this.props.canDrag}/>
-        <Result result={this.props.result}/>
+        <Result result={this.props.result} isLoading={this.props.isLoading}/>
       </>
     )
   }
 }
+
 
 export default Calculation;
