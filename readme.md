@@ -6,9 +6,10 @@ For example, entering the calculation `10 + 20 - 30 + 15 * 5` would return the r
 
 This module can currently handle the following inputs:
 
-- Whole numbers e.g 0,1,2,3,4
-- Negative numbers e.g. -1,-2,-3,-4,-5
-- Decimal numbers e.g. 1.0,1.1,1.2,1.3,1.4,1.5
+- Whole numbers e.g `0`, `1`, `2`, `3`, `4`
+- Negative numbers e.g. `-1`, `-2`, `-3`, `-4`, `-5`
+- Decimal numbers e.g. `1.0`, `1.1`, `1.2`, `1.3`, `1.4`, `1.5`
+- Operators `+`, `-`, `/`, `*`
 
 The module comes with various ways to display this result, more information about this can be found under the `Display Options` section.
 
@@ -59,8 +60,10 @@ Settings for the field formatter can be found on the `Manage display` page and i
 3. `Hover for results` - Instead of just showing the result as a number it will display the calculation and on hover show the result.
 
 ![Mathematical Example](https://i.imgur.com/NYlnvOk.png)
+An example of the full output.
 
 ![Mathematical Hover Example](https://media.giphy.com/media/JROqIgxwwJArHoHnMQ/giphy.gif)
+An example of the full output with hover for results enabled.
 
 ### Mathematical (Jumble)
 
@@ -69,6 +72,7 @@ The Mathematical (Jumble) format gives a more interactive way to display the cal
 There are currently now settings for this formatter.
 
 ![Mathematical Jumble Example](https://media.giphy.com/media/TL6epnb9u2QZSWe9mo/giphy.gif)
+An example of the jumble field being used.
 
 
 ## Service
