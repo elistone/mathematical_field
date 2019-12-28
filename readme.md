@@ -60,9 +60,11 @@ Settings for the field formatter can be found on the `Manage display` page and i
 3. `Hover for results` - Instead of just showing the result as a number it will display the calculation and on hover show the result.
 
 ![Mathematical Example](https://i.imgur.com/NYlnvOk.png)
+
 An example of the full output.
 
 ![Mathematical Hover Example](https://media.giphy.com/media/JROqIgxwwJArHoHnMQ/giphy.gif)
+
 An example of the full output with hover for results enabled.
 
 ### Mathematical (Jumble)
@@ -72,6 +74,7 @@ The Mathematical (Jumble) format gives a more interactive way to display the cal
 There are currently now settings for this formatter.
 
 ![Mathematical Jumble Example](https://media.giphy.com/media/TL6epnb9u2QZSWe9mo/giphy.gif)
+
 An example of the jumble field being used.
 
 
