@@ -34,7 +34,7 @@ This module does not create its own field type instead it extends the `Text (pla
 
 You can add the field in 3 easy steps:
 
-1. Chose the content type you would like to add a `Mathemtical Field` too.
+1. Choose the content type you would like to add a `Mathematical Field` too.
 2. Add a new field of either `Text (plain)` & `Text (plain, long)`
 3. On the `Manage display` tab set the new fields format to `Mathematical`.
 
@@ -51,7 +51,7 @@ There are two display options within this module.
 
 ### Mathematical
 
-The Mathematical format will display your calculation result and has options to to show more information.
+The Mathematical format will display your calculation result and has options to show more information.
 
 Settings for the field formatter can be found on the `Manage display` page and include the following:
 
@@ -71,7 +71,7 @@ An example of the full output with hover for results enabled.
 
 The Mathematical (Jumble) format gives a more interactive way to display the calculation, with the ability to move numbers and operators around to see what happens to the result in real time.
 
-There are currently now settings for this formatter.
+There are currently no settings for this formatter.
 
 ![Mathematical Jumble Example](https://media.giphy.com/media/TL6epnb9u2QZSWe9mo/giphy.gif)
 
@@ -82,9 +82,9 @@ An example of the jumble field being used.
 
 This module contains two services which if so required can be used in 3rd-party applications.
 
-The Lexer, which converts a calculation into a format that the Parser can use to work out the result, using the Lexer can do the following, tokenize the string, sorting the precedence and convert from infix to postfix.
+The Lexer, which converts a calculation into a format that the Parser can use to work out the result, can do the following: tokenize the string, sort the precedence and convert from infix to postfix.
 
-The Parser, uses the Lexer and then takes this information to return a result.
+The Parser uses the Lexer and then takes this information to return a result.
 
 
 ### Lexer
@@ -92,7 +92,6 @@ The Parser, uses the Lexer and then takes this information to return a result.
 To use the Lexer you can use the following:
 
 ```php
-
 $string = "1 + 1";
 
 $mathematicalLexer = \Drupal::service('mathematical_field.lexer');
@@ -102,7 +101,6 @@ $sorted = $tokenize->sortPrecedence();
 $postfix = $sorted->getPostfix()->getResultString();
 
 print $postfix; // returns 11+
-
 ```
 
 ### Parser
@@ -110,7 +108,6 @@ print $postfix; // returns 11+
 To calculate results from string you can simply use:
 
 ```php
-
 $input = "1 + 1";
 
 $mathematicalParser = \Drupal::service('mathematical_field.parser');
@@ -124,5 +121,4 @@ try {
 }
 
 print $result; // returns 2
-
 ```
